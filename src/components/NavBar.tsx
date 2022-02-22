@@ -1,82 +1,132 @@
-import { ReactNode } from 'react';
+import * as React from "react";
+import Logo from "./Logo";
+import NextLink from "next/link";
+import ThemeToggleButton from "./ThemeToggleButton";
 import {
   Box,
+  Container,
   Flex,
-  Avatar,
+  forwardRef,
+  Heading,
+  IconButton,
   Link,
-  Button,
   Menu,
   MenuButton,
-  MenuList,
   MenuItem,
-  MenuDivider,
-  useDisclosure,
-  useColorModeValue,
+  MenuList,
   Stack,
-  useColorMode,
-  Center,
-  IconButton,
-  HStack,
-} from '@chakra-ui/react';
-import { CloseIcon, HamburgerIcon, MoonIcon, SunIcon } from '@chakra-ui/icons';
+  useColorModeValue,
+} from "@chakra-ui/react";
+import { HamburgerIcon } from "@chakra-ui/icons";
 
-const Links = ['Dashboard', 'Projects', 'Team'];
+interface LinkItemProps {
+  href: any;
+  path: any;
+  _target?: string;
+}
 
-const NavLink = ({ children }: { children: ReactNode }) => (
-  <Link
-    px={2}
-    py={1}
-    rounded={'md'}
-    _hover={{
-      textDecoration: 'none',
-      bg: useColorModeValue('gray.200', 'gray.700'),
-    }}
-    href={'#'}>
-    {children}
-  </Link>
-);
+interface NavbarProps {
+  path: any;
+}
 
-export default function Nav() {
-  const { colorMode, toggleColorMode } = useColorMode();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+const LinkItem: React.FC<LinkItemProps> = ({
+  href,
+  path,
+  _target,
+  children,
+  ...props
+}) => {
+  const active = path === href;
+  const inactiveColor = useColorModeValue("gray200", "whiteAlpha.900");
   return (
-    <>
-      <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
-        <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
-          <IconButton
-            size={'md'}
-            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
-            aria-label={'Open Menu'}
-            display={{ md: 'none' }}
-            onClick={isOpen ? onClose : onOpen}
-          />
-          <HStack spacing={8} alignItems={'center'}>
-            <Box>Logo</Box>
-            <HStack
-              as={'nav'}
-              spacing={4}
-              display={{ base: 'none', md: 'flex' }}>
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
-              ))}
-            </HStack>
-          </HStack>
-          <Button onClick={toggleColorMode}>
-              {colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
-         </Button>
+    <NextLink href={href} passHref scroll={false}>
+      <Link
+        p={2}
+        bg={active ? "grassTeal" : undefined}
+        color={active ? "#202023" : inactiveColor}
+        target={_target}
+        {...props}
+      >
+        {children}
+      </Link>
+    </NextLink>
+  );
+};
+
+const Navbar: React.FC<NavbarProps> = (props) => {
+  const { path } = props;
+
+  return (
+    <Box
+      position="fixed"
+      as="nav"
+      w="100%"
+      bg={useColorModeValue("#ffffff40", "#20202380")}
+      css={{ backdropFilter: "blur(10px)" }}
+      zIndex={1}
+      {...props}
+    >
+      <Container
+        display="flex"
+        p={2}
+        maxW="container.md"
+        flexWrap={"wrap"}
+        alignContent="center"
+        justifyContent={"space-between"}
+      >
+        <Flex align="center" mr={5}>
+          <Heading as="h1" size="lg" letterSpacing={"tighter"}>
+            <Logo />
+          </Heading>
         </Flex>
 
-        {isOpen ? (
-          <Box pb={4} display={{ md: 'none' }}>
-            <Stack as={'nav'} spacing={4}>
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
-              ))}
-            </Stack>
-          </Box>
-        ) : null}
-      </Box>
-    </>
+        <Stack
+          direction={{ base: "column", md: "row" }}
+          display={{ base: "none", md: "flex" }}
+          width={{ base: "full", md: "auto" }}
+          alignItems="center"
+          flexGrow={1}
+          mt={{ base: 4, md: 0 }}
+        >
+          <LinkItem href="/abouts" path={path}>
+            About
+          </LinkItem>
+          <LinkItem href="/works" path={path}>
+            Works
+          </LinkItem>
+          <LinkItem href="/speaks" path={path}>
+            Speaks
+          </LinkItem>
+        </Stack>
 
+        <Box flex={1} textAlign="right">
+          <ThemeToggleButton />
+
+          <Box ml={2} display={{ base: "inline-block", md: "none" }}>
+            <Menu isLazy id="navbar-menu">
+              <MenuButton
+                as={IconButton}
+                icon={<HamburgerIcon />}
+                variant="outline"
+                aria-label="Options"
+              />
+              <MenuList>
+                <NextLink href="/abouts" passHref>
+                  <MenuItem as={Link}>About</MenuItem>
+                </NextLink>
+                <NextLink href="/works" passHref>
+                  <MenuItem as={Link}>Works</MenuItem>
+                </NextLink>
+                <NextLink href="/speaks" passHref>
+                  <MenuItem as={Link}>Speaks</MenuItem>
+                </NextLink>
+              </MenuList>
+            </Menu>
+          </Box>
+        </Box>
+      </Container>
+    </Box>
   );
-}
+};
+
+export default Navbar;

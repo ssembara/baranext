@@ -1,14 +1,24 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
+import Body from "../components/layouts/Body";
+import React from "react";
+import { Box, Container, useColorModeValue } from "@chakra-ui/react";
 
-import { Box, Container } from '@chakra-ui/react'
-import Hero from '../components/Hero'
-
-const Home: NextPage = () => {
+const Home = () => {
   return (
-   <Hero/>
-  )
-}
+    <Body title={"Home"}>
+      <Container maxW={"7xl"}>
+        <Box
+          borderRadius="lg"
+          mt={6}
+          mb={6}
+          p={3}
+          textAlign="center"
+          bg={useColorModeValue("whiteAlpha.500", "whiteAlpha.200")}
+        >
+          Baranextttt 🍃
+        </Box>
+      </Container>
+    </Body>
+  );
+};
 
-export default Home
+export default Home;

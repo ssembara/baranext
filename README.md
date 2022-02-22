@@ -22,7 +22,7 @@ Clone this repository and ```npm install``` or ```yarn```
 
 ## Features
 
-- 💻 Made using [Next.js 12](https://nextjs.org) + [Chakra UI](https://chakra-ui.com) + [Typescript](https://www.typescriptlang.org/)
+- 💻 Made using [Next.js 12](https://nextjs.org), [Chakra UI](https://chakra-ui.com), [Framer Motion](https://www.framer.com/motion/)
 
 ## Usage
 
